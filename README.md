@@ -1,6 +1,6 @@
-# SPM
+# Sciter package manager (SPM)
 
-Sciter package manager is a command line tool to install sciter packages.
+SPM is an experimental command line tool to install sciter packages.
 
 ## how to install
 
@@ -23,7 +23,9 @@ Sciter package manager is a command line tool to install sciter packages.
 
 * install packages
 
+```
     php spm.phar install
+```
 
 ## build phar
 
