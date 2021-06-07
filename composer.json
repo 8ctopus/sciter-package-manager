@@ -1,0 +1,23 @@
+{
+    "name": "8ctopus/spm",
+    "description": "sciter package manager",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "8ctopus",
+            "email": "hello@octopuslabs.io"
+        }
+    ],
+    "require": {
+        "symfony/console": "^5.0",
+        "symfony/finder": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Oct8pus\\SPM\\": "src/"
+        }
+    },
+    "bin": [
+        "spm"
+    ]
+}

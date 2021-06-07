@@ -1,0 +1,10 @@
+/etc/
+/log/
+/ssl/
+
+/vendor/
+
+*.webp
+
+/*.sublime-workspace
+/*.phar
