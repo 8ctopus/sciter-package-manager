@@ -38,6 +38,14 @@ class CommandInstall extends Command
         // beautify input, output interface
         $this->io = new SymfonyStyle($input, $output);
 
+        // delete vendor dir
+        $dir = getcwd() ."/vendor/";
+
+        // delete directory if it exists
+        if (is_dir($dir))
+            Helper::delTree($dir);
+
+        // get path to sciter.json
         $file = realpath(self::$sciter_file);
 
         // check for sciter.json
