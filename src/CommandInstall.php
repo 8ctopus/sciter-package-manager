@@ -66,10 +66,11 @@ class CommandInstall extends Command
             return 0;
         }
 
-        if ($this->install($array['require']))
-            return 0;
+        if (!$this->install($array['require']))
+            return 1;
 
-        return 1;
+        $this->io->success('All packages installed');
+        return 0;
     }
 
     /**
@@ -189,22 +190,18 @@ class CommandInstall extends Command
                 $array = $this->dependencies($file);
 
                 if (!$array)
-                    return false;
+                    break;
 
                 // any requires?
                 if (!array_key_exists('require', $array) || count($array['require']) === 0) {
                     $this->io->warning("No packages required");
-                    return true;
+                    break;
                 }
 
                 if (!$this->install($array['require']))
-                    return false;
-
-                return true;
+                    $this->io->error("Install packages - FAILED");
             }
         }
-
-        $this->io->success('All packages installed');
 
         return true;
     }
