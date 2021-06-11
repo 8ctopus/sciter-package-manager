@@ -15,6 +15,8 @@ use Oct8pus\SPM\Helper;
 class CommandInstall extends Command
 {
     private static $sciter_file = 'sciter.json';
+    private $io;
+
     /**
      * Configure command options
      * @return void
@@ -34,56 +36,80 @@ class CommandInstall extends Command
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         // beautify input, output interface
-        $io = new SymfonyStyle($input, $output);
-
-        // get current working directory
-        //REM $io->writeln(getcwd());
+        $this->io = new SymfonyStyle($input, $output);
 
         $file = realpath(self::$sciter_file);
 
-        //REM $io->writeln($file);
-
         // check for sciter.json
         if (!file_exists($file)) {
-            $io->error("File sciter.json not found - FAILED");
+            $this->io->error("File sciter.json not found - FAILED");
             return 1;
         }
 
+        // parse sciter.json
+        $array = $this->dependencies($file);
+
+        if (!$array)
+            return 1;
+
+        // any requires?
+        if (!array_key_exists('require', $array) || count($array['require']) === 0) {
+            $this->io->warning("No packages required");
+            return 0;
+        }
+
+        if ($this->install($array['require']))
+            return 0;
+
+        return 1;
+    }
+
+    /**
+     * Get dependencies
+     * @param  string $file
+     * @return array on success, false otherwise
+     */
+    protected function dependencies(string $file) : array|bool
+    {
         // load file
         $json = file_get_contents($file);
 
         if ($json === false) {
-            $io->error("Read sciter.json - FAILED");
-            return 1;
+            $this->io->error("Read sciter.json - FAILED");
+            return false;
         }
 
         // convert json to php array
         $array = json_decode($json, true);
 
         if ($array === null) {
-            $io->error("Parse sciter.json - FAILED");
-            return 1;
+            $this->io->error("Parse sciter.json - FAILED");
+            return false;
         }
 
-        // any requires?
-        if (!array_key_exists('require', $array) || count($array['require']) === 0) {
-            $io->warning("No packages required");
-            return 0;
-        }
+        return $array;
+    }
 
+    /**
+     * Install dependencies
+     * @param  array $requires
+     * @return bool
+     */
+    protected function install(array $requires) : bool
+    {
         // loop through requires
-        foreach ($array['require'] as $require => $version) {
+        foreach ($requires as $require => $version) {
             //https://github.com/8ctopus/sciter-fontawesome/releases/tag/1.0.0.zip
             //https://github.com/8ctopus/sciter-fontawesome/archive/refs/tags/1.0.0.zip
 
-            $io->writeln("Install {$require}:{$version}...");
+            $this->io->writeln("Install {$require}:{$version}...");
 
             // get temporary file name for archive
             $archive = tempnam(sys_get_temp_dir(), "spm") .'.zip';
 
             if ($archive === false) {
-                $io->error("Get archive temporary name - FAILED");
-                return 1;
+                $this->io->error("Get archive temporary name - FAILED");
+                return false;
             }
 
             // get archive url
@@ -94,8 +120,8 @@ class CommandInstall extends Command
             $result = Curl::downloadFile($url, $archive, $info, true);
 
             if ($result !== true) {
-                $io->error("Download archive - FAILED");
-                return 1;
+                $this->io->error("Download archive - FAILED");
+                return false;
             }
 
             // open archive
@@ -103,23 +129,23 @@ class CommandInstall extends Command
             $result = $zip->open($archive, MZipArchive::RDONLY);
 
             if ($result !== true) {
-                $io->error("Open zip - FAILED - {$result}");
-                return 1;
+                $this->io->error("Open zip - FAILED - {$result}");
+                return false;
             }
 
             // get author and project from url
             $path = parse_url($url, PHP_URL_PATH);
 
             if ($path === false) {
-                $io->error("Parse url - FAILED");
-                return 1;
+                $this->io->error("Parse url - FAILED");
+                return false;
             }
 
             $matches;
 
             if (preg_match("/\/(.*?)\/(.*?)\//", $path, $matches) !== 1) {
-                $io->error("Extract user and project - FAILED");
-                return 1;
+                $this->io->error("Extract user and project - FAILED");
+                return false;
             }
 
             $author  = $matches[1];
@@ -134,8 +160,8 @@ class CommandInstall extends Command
 
             // create vendor dir if it doesn't exist
             if (!is_dir($dir) && !mkdir($dir, 0775, true)) {
-                $io->error("Make package directory - FAILED - {$result}");
-                return 1;
+                $this->io->error("Make package directory - FAILED - {$result}");
+                return false;
             }
 
             // get archive first directory which we do not want to extract
@@ -145,26 +171,33 @@ class CommandInstall extends Command
             // extract package subdir to vendor dir
             $zip->extractSubdirTo($dir, $fileinfo['basename']);
 
-            /*
-            // extract package to vendor dir
-            // skip first directory in archive
-            for ($i = 1; $i < $zip->numFiles; $i++) {
-                // get filename
-                $filename = $zip->getNameIndex($i);
-
-                $fileinfo = pathinfo($filename);
-                if (!copy("zip://test.zip#{$filename}", "{$dir}/{$fileinfo['basename']}")) {
-                    $io->error("Extract file from package - FAILED - {$fileinfo['basename']}");
-                    return 1;
-                }
-            }
-            */
-
             $zip->close();
+
+            // check if package has dependencies
+            $file = $dir .'/'. self::$sciter_file;
+
+            if (file_exists($file)) {
+                // parse sciter.json
+                $array = $this->dependencies($file);
+
+                if (!$array)
+                    return false;
+
+                // any requires?
+                if (!array_key_exists('require', $array) || count($array['require']) === 0) {
+                    $this->io->warning("No packages required");
+                    return true;
+                }
+
+                if (!$this->install($array['require']))
+                    return false;
+
+                return true;
+            }
         }
 
-        $io->success('All packages installed');
+        $this->io->success('All packages installed');
 
-        return 0;
+        return true;
     }
 }
