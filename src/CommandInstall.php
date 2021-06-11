@@ -183,7 +183,7 @@ class CommandInstall extends Command
             $zip->close();
 
             // check if package has dependencies
-            $file = $dir .'/'. self::$sciter_file;
+            $file = $dir .'/src/'. self::$sciter_file;
 
             if (file_exists($file)) {
                 // parse sciter.json
