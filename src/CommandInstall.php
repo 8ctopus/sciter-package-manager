@@ -15,6 +15,7 @@ use Oct8pus\SPM\Helper;
 class CommandInstall extends Command
 {
     private static $sciter_file = 'sciter.json';
+    private $installed = [];
     private $io;
 
     /**
@@ -66,6 +67,7 @@ class CommandInstall extends Command
             return 0;
         }
 
+        // install requires
         if (!$this->install($array['require']))
             return 1;
 
@@ -111,7 +113,13 @@ class CommandInstall extends Command
             //https://github.com/8ctopus/sciter-fontawesome/releases/tag/1.0.0.zip
             //https://github.com/8ctopus/sciter-fontawesome/archive/refs/tags/1.0.0.zip
 
+            if (in_array("{$require}:{$version}", $this->installed, true)) {
+                $this->io->writeln("Skip install {$require}:{$version}...");
+                continue;
+            }
+
             $this->io->writeln("Install {$require}:{$version}...");
+            $this->installed[] = "{$require}:{$version}";
 
             // get temporary file name for archive
             $archive = tempnam(sys_get_temp_dir(), "spm") .'.zip';
