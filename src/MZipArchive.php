@@ -35,7 +35,7 @@ class MZipArchive extends ZipArchive
                 if (mb_strlen($relativePath, "UTF-8") > 0)
                 {
                     if (substr($filename, -1) === "/") { // Directory
-                        // New dir
+                        // new dir
                         if (!is_dir($destination . $relativePath))
                             if (!@mkdir($destination . $relativePath, 0755, true))
                                 $errors[$i] = $filename;
@@ -48,7 +48,7 @@ class MZipArchive extends ZipArchive
                             }
                         }
 
-                        // New file
+                        // new file
                         if (@file_put_contents($destination . $relativePath, $this->getFromIndex($i)) === false)
                             $errors[$i] = $filename;
                     }
