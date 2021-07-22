@@ -27,3 +27,11 @@ SPM is an experimental command line tool to install sciter packages.
 ## build phar
 
     php src/Compiler.php
+
+## run spm in debug
+
+```sh
+composer install
+
+php src/Entrypoint.php install
+```
