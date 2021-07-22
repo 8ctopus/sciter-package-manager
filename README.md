@@ -1,10 +1,10 @@
 # Sciter package manager (SPM)
 
-SPM is an experimental command line tool to install sciter packages.
+SPM is an experimental sciter.js package manager.
 
 ## how to install
 
-    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.0.1/spm.phar
+    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.1.4/spm.phar
 
 ## how to use
 
@@ -20,18 +20,20 @@ SPM is an experimental command line tool to install sciter packages.
 
 * install packages
 
+```sh
+php spm.phar install
 ```
-    php spm.phar install
-```
 
-## build phar
-
-    php src/Compiler.php
-
-## run spm in debug
+## debug code
 
 ```sh
 composer install
 
 php src/Entrypoint.php install
+```
+
+## build phar
+
+```sh
+php src/Compiler.php
 ```
