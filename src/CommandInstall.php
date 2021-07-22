@@ -41,15 +41,15 @@ class CommandInstall extends Command
         // delete vendor dir
         $dir = getcwd() ."/vendor/";
 
-        // delete directory if it exists
-        if (is_dir($dir))
+        // delete vendor directory if not also used by composer
+        if (is_dir($dir) && !file_exists($dir .'autoload.php'))
             Helper::delTree($dir);
 
         // get path to sciter.json
         $file = realpath(self::$sciter_file);
 
         // check for sciter.json
-        if (!file_exists($file)) {
+        if (gettype($file) !== "string" || !file_exists($file)) {
             $this->io->error("File sciter.json not found - FAILED");
             return 1;
         }
@@ -182,6 +182,9 @@ class CommandInstall extends Command
 
             $zip->close();
 
+            // update vendor path in source files
+            $this->updateVendorPath($dir .'/src/');
+
             // check if package has dependencies
             $file = $dir .'/src/'. self::$sciter_file;
 
@@ -204,5 +207,33 @@ class CommandInstall extends Command
         }
 
         return true;
+    }
+
+    /**
+     * Update vendor path in source files
+     * @param  string $dir
+     * @return void
+     */
+    protected function updateVendorPath(string $dir) : void
+    {
+        $files = array_diff(scandir($dir), ['.', '..']);
+
+        foreach ($files as $file) {
+            if (pathinfo($file, PATHINFO_EXTENSION) !== "js")
+                continue;
+
+            $content = file_get_contents($dir . $file, false);
+
+            $count   = 0;
+
+            $content = str_replace("../vendor/", "../../../", $content, $count);
+
+            if (!$count)
+                continue;
+
+            $this->io->writeln("Updated vendor path {$dir}{$file}");
+
+            file_put_contents($dir . $file, $content);
+        }
     }
 }
