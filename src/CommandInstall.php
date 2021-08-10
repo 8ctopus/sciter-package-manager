@@ -227,7 +227,7 @@ class CommandInstall extends Command
         $files = array_diff(scandir($dir), ['.', '..']);
 
         foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) !== "js")
+            if (!in_array(pathinfo($file, PATHINFO_EXTENSION), ["js", "htm", "html"]))
                 continue;
 
             $content = file_get_contents($dir . $file, false);
