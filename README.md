@@ -1,10 +1,10 @@
-# Sciter package manager (SPM)
+# Sciter package manager
 
-SPM is an experimental sciter.js package manager.
+Sciter package manager (SPM) is an experimental sciter.js package manager.
 
 ## how to install
 
-    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.1.4/spm.phar
+    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.1.5/spm.phar
 
 ## how to use
 
