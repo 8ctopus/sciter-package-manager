@@ -84,7 +84,6 @@ class CommandInstall extends Command
     {
         // loop through requires
         foreach ($requires as $require => $version) {
-            //https://github.com/8ctopus/sciter-fontawesome/releases/tag/1.0.0.zip
             //https://github.com/8ctopus/sciter-fontawesome/archive/refs/tags/1.0.0.zip
 
             if (in_array("{$require}:{$version}", $this->installed, true)) {
