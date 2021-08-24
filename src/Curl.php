@@ -172,22 +172,28 @@ class Curl
             CURLOPT_TIMEOUT        => 5,
 
             CURLOPT_VERBOSE        => false,
+
             // fail verbosely if the HTTP code returned is greater than or equal to 400
             CURLOPT_FAILONERROR    => false,
 
             // follow redirections
             CURLOPT_FOLLOWLOCATION => false,
+
             // how many redirections to follow
             CURLOPT_MAXREDIRS      => 0,
-//            CURLOPT_ENCODING       => '', //'gzip, deflate',
-//            CURLOPT_HTTPHEADER     => [
-//                'Accept-Encoding: gzip, deflate',
-//            ],
 
-//            CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4058.0 Safari/537.36',
+//            CURLOPT_ENCODING       => '', //'gzip, deflate',
+
+            CURLOPT_HTTPHEADER     => [
+                //'accept-encoding: gzip, deflate, br',
+                'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
+            ],
+
+            CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4058.0 Safari/537.36',
 
             // check the CA auth chain
             CURLOPT_SSL_VERIFYPEER => false,
+
             // check hostname/certname match
             CURLOPT_SSL_VERIFYHOST => 2,
         ];
