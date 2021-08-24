@@ -15,7 +15,6 @@ use Oct8pus\SPM\Helper;
 
 class CommandShow extends Command
 {
-    private static $sciter_file = 'sciter.json';
     private $output, $io;
 
     /**
@@ -25,7 +24,7 @@ class CommandShow extends Command
     protected function configure() : void
     {
         $this->setName('show')
-            ->setDescription('Show packages');
+            ->setDescription('Show installed and latest packages version');
     }
 
     /**
@@ -42,7 +41,7 @@ class CommandShow extends Command
         $this->output = $output;
 
         // get path to sciter.json
-        $file = realpath(self::$sciter_file);
+        $file = realpath(Helper::$sciter_file);
 
         // check for sciter.json
         if (gettype($file) !== "string" || !file_exists($file)) {
@@ -51,7 +50,7 @@ class CommandShow extends Command
         }
 
         // parse sciter.json
-        $array = $this->dependencies($file);
+        $array = Helper::dependencies($file);
 
         if (!$array)
             return 1;
@@ -66,37 +65,15 @@ class CommandShow extends Command
         if (!$this->show($array['require']))
             return 1;
 
-        //$this->io->success('All packages installed');
         return 0;
     }
 
     /**
-     * Get dependencies
-     * @param  string $file
-     * @return array on success, false otherwise
+     * Show current and latest version
+     * @param  array  $requires
+     * @return bool true on success, false otherwise
      */
-    protected function dependencies(string $file) : array|bool
-    {
-        // load file
-        $json = file_get_contents($file);
-
-        if ($json === false) {
-            $this->io->error("Read sciter.json - FAILED");
-            return false;
-        }
-
-        // convert json to php array
-        $array = json_decode($json, true);
-
-        if ($array === null) {
-            $this->io->error("Parse sciter.json - FAILED");
-            return false;
-        }
-
-        return $array;
-    }
-
-    protected function show(array $requires) : void
+    protected function show(array $requires) : bool
     {
         // create table
         $table = new Table($this->output);
@@ -109,7 +86,7 @@ class CommandShow extends Command
 
             if ($path === false) {
                 $this->io->error("Parse url - FAILED");
-                return;
+                return false;
             }
 
             // extract user and project from url
@@ -117,7 +94,7 @@ class CommandShow extends Command
 
             if (preg_match("~/(.*)/(.*)/?~", $path, $matches) !== 1) {
                 $this->io->error("Extract user and project - FAILED");
-                return;
+                return false;
             }
 
             $author  = $matches[1];
@@ -133,7 +110,7 @@ class CommandShow extends Command
 
             if ($result !== true) {
                 $this->io->error("Download tags - FAILED");
-                return;
+                return false;
             }
 
             // convert json to php array
@@ -148,5 +125,7 @@ class CommandShow extends Command
 
         // show table
         $table->render();
+
+        return true;
     }
 }

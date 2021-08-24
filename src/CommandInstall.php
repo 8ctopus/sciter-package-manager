@@ -14,7 +14,6 @@ use Oct8pus\SPM\Helper;
 
 class CommandInstall extends Command
 {
-    private static $sciter_file = 'sciter.json';
     private $installed = [];
     private $io;
 
@@ -40,14 +39,14 @@ class CommandInstall extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         // delete vendor dir
-        $dir = $this->getcwd() ."/vendor/";
+        $dir = Helper::getcwd() ."/vendor/";
 
         // delete vendor directory if not also used by composer
         if (is_dir($dir) && !file_exists($dir .'autoload.php'))
             Helper::delTree($dir);
 
         // get path to sciter.json
-        $file = realpath(self::$sciter_file);
+        $file = realpath(Helper::$sciter_file);
 
         // check for sciter.json
         if (gettype($file) !== "string" || !file_exists($file)) {
@@ -56,7 +55,7 @@ class CommandInstall extends Command
         }
 
         // parse sciter.json
-        $array = $this->dependencies($file);
+        $array = Helper::dependencies($file);
 
         if (!$array)
             return 1;
@@ -72,33 +71,8 @@ class CommandInstall extends Command
             return 1;
 
         $this->io->success('All packages installed');
+
         return 0;
-    }
-
-    /**
-     * Get dependencies
-     * @param  string $file
-     * @return array on success, false otherwise
-     */
-    protected function dependencies(string $file) : array|bool
-    {
-        // load file
-        $json = file_get_contents($file);
-
-        if ($json === false) {
-            $this->io->error("Read sciter.json - FAILED");
-            return false;
-        }
-
-        // convert json to php array
-        $array = json_decode($json, true);
-
-        if ($array === null) {
-            $this->io->error("Parse sciter.json - FAILED");
-            return false;
-        }
-
-        return $array;
     }
 
     /**
@@ -169,7 +143,7 @@ class CommandInstall extends Command
             $project = $matches[2];
 
             // set package installation dir
-            $dir = $this->getcwd() ."/vendor/{$author}/{$project}/src/";
+            $dir = Helper::getcwd() ."/vendor/{$author}/{$project}/src/";
 
             // delete directory if it exists
             if (is_dir($dir))
@@ -194,11 +168,11 @@ class CommandInstall extends Command
             $this->updateVendorPath($dir);
 
             // check if package has dependencies
-            $file = $dir . self::$sciter_file;
+            $file = $dir . Helper::$sciter_file;
 
             if (file_exists($file)) {
                 // parse sciter.json
-                $array = $this->dependencies($file);
+                $array = Helper::dependencies($file);
 
                 if (!$array)
                     break;
@@ -243,19 +217,5 @@ class CommandInstall extends Command
 
             file_put_contents($dir . $file, $content);
         }
-    }
-
-    /**
-     * Get current working directory in unix format /
-     * @return string
-     */
-    protected function getcwd() : string
-    {
-        $dir = getcwd();
-
-        if (strtolower(substr(php_uname('s'), 0, 3)) === 'win')
-            return str_replace("\\", "/", $dir);
-        else
-            return $dir;
     }
 }
