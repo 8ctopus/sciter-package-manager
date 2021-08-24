@@ -40,7 +40,7 @@ class CommandInstall extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         // delete vendor dir
-        $dir = getcwd() ."/vendor/";
+        $dir = $this->getcwd() ."/vendor/";
 
         // delete vendor directory if not also used by composer
         if (is_dir($dir) && !file_exists($dir .'autoload.php'))
@@ -169,7 +169,7 @@ class CommandInstall extends Command
             $project = $matches[2];
 
             // set package installation dir
-            $dir = getcwd() ."/vendor/{$author}/{$project}";
+            $dir = $this->getcwd() ."/vendor/{$author}/{$project}";
 
             // delete directory if it exists
             if (is_dir($dir))
@@ -243,5 +243,19 @@ class CommandInstall extends Command
 
             file_put_contents($dir . $file, $content);
         }
+    }
+
+    /**
+     * Get current working directory in unix format /
+     * @return string
+     */
+    protected function getcwd() : string
+    {
+        $dir = getcwd();
+
+        if (strtolower(substr(php_uname('s'), 0, 3)) === 'win')
+            return str_replace("\\", "/", $dir);
+        else
+            return $dir;
     }
 }
