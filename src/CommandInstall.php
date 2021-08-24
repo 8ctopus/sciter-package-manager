@@ -160,7 +160,7 @@ class CommandInstall extends Command
 
             $matches;
 
-            if (preg_match("/\/(.*?)\/(.*?)\//", $path, $matches) !== 1) {
+            if (preg_match("~/(.*?)/(.*?)/~", $path, $matches) !== 1) {
                 $this->io->error("Extract user and project - FAILED");
                 return false;
             }
@@ -169,13 +169,13 @@ class CommandInstall extends Command
             $project = $matches[2];
 
             // set package installation dir
-            $dir = $this->getcwd() ."/vendor/{$author}/{$project}";
+            $dir = $this->getcwd() ."/vendor/{$author}/{$project}/src/";
 
             // delete directory if it exists
             if (is_dir($dir))
                 Helper::delTree($dir);
 
-            // create vendor dir if it doesn't exist
+            // create dir if it doesn't exist
             if (!is_dir($dir) && !mkdir($dir, 0775, true)) {
                 $this->io->error("Make package directory - FAILED - {$result}");
                 return false;
@@ -186,15 +186,15 @@ class CommandInstall extends Command
             $fileinfo = pathinfo($filename);
 
             // extract package subdir to vendor dir
-            $zip->extractSubdirTo($dir, $fileinfo['basename']);
+            $zip->extractSubdirTo($dir, $fileinfo['basename'] .'/src');
 
             $zip->close();
 
             // update vendor path in source files
-            $this->updateVendorPath($dir .'/src/');
+            $this->updateVendorPath($dir);
 
             // check if package has dependencies
-            $file = $dir .'/src/'. self::$sciter_file;
+            $file = $dir . self::$sciter_file;
 
             if (file_exists($file)) {
                 // parse sciter.json
