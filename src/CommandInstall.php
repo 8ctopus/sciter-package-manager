@@ -38,8 +38,14 @@ class CommandInstall extends Command
         // beautify input, output interface
         $this->io = new SymfonyStyle($input, $output);
 
+        // check for curl extension
+        if (!function_exists('curl_exec')) {
+            $this->io->error("php curl extension not enabled");
+            return 1;
+        }
+
         // delete vendor dir
-        $dir = Helper::getcwd() ."/vendor/";
+        $dir = Helper::getcwd() .'/vendor/';
 
         // delete vendor directory if not also used by composer
         if (is_dir($dir) && !file_exists($dir .'autoload.php'))

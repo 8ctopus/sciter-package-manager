@@ -40,6 +40,12 @@ class CommandShow extends Command
 
         $this->output = $output;
 
+        // check for curl extension
+        if (!function_exists('curl_exec')) {
+            $this->io->error("php curl extension not enabled");
+            return 1;
+        }
+
         // get path to sciter.json
         $file = realpath(Helper::$sciter_file);
 
