@@ -1,6 +1,10 @@
 # Sciter package manager
 
-Sciter package manager (SPM) is an experimental sciter.js package manager.
+Sciter package manager (SPM) is an experimental sciter.js package manager written in php.
+
+## requirements
+
+- php with curl module enabled
 
 ## how to install
 
