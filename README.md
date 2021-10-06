@@ -48,3 +48,8 @@ php src/Entrypoint.php install
 ```sh
 php src/Compiler.php
 ```
+
+## todo
+
+- solve same module different version
+- add update command
