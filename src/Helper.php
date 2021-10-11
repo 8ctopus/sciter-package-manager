@@ -27,7 +27,7 @@ class Helper
      * @param  string $file
      * @return array on success, false otherwise
      */
-    static function dependencies(string $file) : array|bool
+    static function dependencies(string $file) /* php 8 only : array|bool */
     {
         // load file
         $json = file_get_contents($file);
