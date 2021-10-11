@@ -4,7 +4,8 @@ Sciter package manager (SPM) is an experimental sciter.js package manager writte
 
 ## requirements
 
-- php >= 7.3 with `curl` module enabled
+- php >= 7.3
+- `curl` and `libzip` modules enabled
 
 ## how to install
 
