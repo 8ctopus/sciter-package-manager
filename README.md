@@ -55,3 +55,7 @@ php src/Compiler.php
 
 - solve same module different version
 - add update command
+
+## known issues
+
+- does not seem to work on Mac because ZipArchive is not included?
