@@ -180,7 +180,10 @@ class CommandInstall extends Command
                 $fileinfo = pathinfo($filename);
 
                 // extract package subdir to vendor dir
-                $zip->extractSubdirTo($dir, "${project}-${version}/src");
+                // doesn't work when version is of type v10.0 (v in front)
+                //$zip->extractSubdirTo($dir, "${project}-${version}/src");
+
+                $zip->extractSubdirTo($dir, "${fileinfo['basename']}/src");
 
                 $zip->close();
             }
