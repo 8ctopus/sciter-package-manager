@@ -49,6 +49,28 @@ class Helper
     }
 
     /**
+     * Get author and project
+     * @param  string $url
+     * @return [type]
+     */
+    static function authorProject(string $url) /* php 8 only : array|bool */
+    {
+        // get author and project from url
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if ($path === false)
+            return false;
+
+        // extract user and project from url
+        $matches;
+
+        if (preg_match("~/(.*)/(.*)/?~", $path, $matches) !== 1)
+            return false;
+
+        return [$matches[1], $matches[2]];
+    }
+
+    /**
      * Get current working directory in unix format /
      * @return string
      */
