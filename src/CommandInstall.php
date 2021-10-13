@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Oct8pus\SPM\Curl;
-use Oct8pus\SPM\MZipArchive;
 use Oct8pus\SPM\Helper;
 
 class CommandInstall extends Command
@@ -120,15 +119,6 @@ class CommandInstall extends Command
                 return false;
             }
 
-            // open archive
-            $zip = new MZipArchive();
-            $result = $zip->open($archive, MZipArchive::RDONLY);
-
-            if ($result !== true) {
-                $this->io->error("Open zip - FAILED - {$result}");
-                return false;
-            }
-
             // get author and project from url
             $path = parse_url($url, PHP_URL_PATH);
 
@@ -160,14 +150,16 @@ class CommandInstall extends Command
                 return false;
             }
 
-            // get archive first directory which we do not want to extract
-            $filename = $zip->getNameIndex(0);
-            $fileinfo = pathinfo($filename);
+            $command = "unzip -j ${archive} ${project}-${version}/src/* -d ${dir}";
 
-            // extract package subdir to vendor dir
-            $zip->extractSubdirTo($dir, $fileinfo['basename'] .'/src');
+            // unzip archive
+            exec($command, $output, $status);
 
-            $zip->close();
+            // check command return code
+            if ($status != 0)
+                return false;
+
+            //$zip->close();
 
             // update vendor path in source files
             $this->updateVendorPath($dir);
