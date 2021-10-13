@@ -151,6 +151,10 @@ class CommandInstall extends Command
                 return false;
             }
 
+            // zip archive first directory does not have version v before number
+            if ($version[0] === 'v')
+                $version = substr($version, 1, strlen($version));
+
             /**
             CODE HAS ISSUES
             if (Helper::commandExists('tar')) {
@@ -175,15 +179,17 @@ class CommandInstall extends Command
                     return false;
                 }
 
+                /*
                 // get archive first directory which we do not want to extract
                 $filename = $zip->getNameIndex(0);
                 $fileinfo = pathinfo($filename);
 
+                $zip->extractSubdirTo($dir, "${fileinfo['basename']}/src");
+                */
+
                 // extract package subdir to vendor dir
                 // doesn't work when version is of type v10.0 (v in front)
-                //$zip->extractSubdirTo($dir, "${project}-${version}/src");
-
-                $zip->extractSubdirTo($dir, "${fileinfo['basename']}/src");
+                $zip->extractSubdirTo($dir, "${project}-${version}/src");
 
                 $zip->close();
             }
