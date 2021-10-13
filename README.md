@@ -10,7 +10,7 @@ Sciter package manager (SPM) is an experimental sciter.js package manager writte
 
 ## how to install
 
-    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.2.0/spm.phar
+    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.2.1/spm.phar
 
 ## how to use
 
@@ -20,7 +20,7 @@ Sciter package manager (SPM) is an experimental sciter.js package manager writte
 {
     "require": {
         "https://github.com/8ctopus/sciter-fontawesome": "1.0.1",
-        "https://github.com/8ctopus/sciter-dialogs": "1.2.17"
+        "https://github.com/8ctopus/sciter-dialogs": "1.2.22"
     }
 }
 ```
