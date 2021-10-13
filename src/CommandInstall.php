@@ -150,16 +150,31 @@ class CommandInstall extends Command
                 return false;
             }
 
-            $command = "unzip -j ${archive} ${project}-${version}/src/* -d ${dir}";
+            if (Helper::commandExists('tar')) {
+                $command = "tar --extract --file ${archive} ${project}-${version}/src/* -d ${dir}";
 
-            // unzip archive
-            exec($command, $output, $status);
+                // unzip archive
+                exec($command, $output, $status);
 
-            // check command return code
-            if ($status != 0)
+                // check command return code
+                if ($status != 0)
+                    return false;
+            }
+            else
+            if (Helper::commandExists('unzip')) {
+                $command = "unzip -j ${archive} ${project}-${version}/src/* -d ${dir}";
+
+                // unzip archive
+                exec($command, $output, $status);
+
+                // check command return code
+                if ($status != 0)
+                    return false;
+            }
+            else {
+                $this->io->error('Neither tar nor unzip available for zip archive unpacking');
                 return false;
-
-            //$zip->close();
+            }
 
             // update vendor path in source files
             $this->updateVendorPath($dir);
