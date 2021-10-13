@@ -10,7 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Helper\Table;
 use Oct8pus\SPM\Curl;
-use Oct8pus\SPM\MZipArchive;
 use Oct8pus\SPM\Helper;
 
 class CommandShow extends Command
