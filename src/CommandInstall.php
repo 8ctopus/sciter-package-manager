@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Oct8pus\SPM\Curl;
+use Oct8pus\SPM\MZipArchive;
 use Oct8pus\SPM\Helper;
 
 class CommandInstall extends Command
@@ -150,6 +151,8 @@ class CommandInstall extends Command
                 return false;
             }
 
+            /**
+            CODE HAS ISSUES
             if (Helper::commandExists('tar')) {
                 $command = "tar --extract --file ${archive} ${project}-${version}/src/* -d ${dir}";
 
@@ -161,6 +164,7 @@ class CommandInstall extends Command
                     return false;
             }
             else
+            */
             if (Helper::commandExists('unzip')) {
                 $command = "unzip -j ${archive} ${project}-${version}/src/* -d ${dir}";
 
@@ -171,8 +175,28 @@ class CommandInstall extends Command
                 if ($status != 0)
                     return false;
             }
+            else
+            if (class_exists('ZipArchive')) {
+                // open archive
+                $zip = new MZipArchive();
+                $result = $zip->open($archive, MZipArchive::RDONLY);
+
+                if ($result !== true) {
+                    $this->io->error("Open zip - FAILED - {$result}");
+                    return false;
+                }
+
+                // get archive first directory which we do not want to extract
+                $filename = $zip->getNameIndex(0);
+                $fileinfo = pathinfo($filename);
+
+                // extract package subdir to vendor dir
+                $zip->extractSubdirTo($dir, "${project}-${version}/src");
+
+                $zip->close();
+            }
             else {
-                $this->io->error('Neither tar nor unzip available for zip archive unpacking');
+                $this->io->error('Neither unzip nor ZipArchive are available for unpacking');
                 return false;
             }
 
