@@ -165,17 +165,6 @@ class CommandInstall extends Command
             }
             else
             */
-            if (Helper::commandExists('unzip')) {
-                $command = "unzip -j ${archive} ${project}-${version}/src/* -d ${dir}";
-
-                // unzip archive
-                exec($command, $output, $status);
-
-                // check command return code
-                if ($status != 0)
-                    return false;
-            }
-            else
             if (class_exists('ZipArchive')) {
                 // open archive
                 $zip = new MZipArchive();
@@ -194,6 +183,17 @@ class CommandInstall extends Command
                 $zip->extractSubdirTo($dir, "${project}-${version}/src");
 
                 $zip->close();
+            }
+            else
+            if (Helper::commandExists('unzip')) {
+                $command = "unzip -j ${archive} ${project}-${version}/src/* -d ${dir}";
+
+                // unzip archive
+                exec($command, $output, $status);
+
+                // check command return code
+                if ($status != 0)
+                    return false;
             }
             else {
                 $this->io->error('Neither unzip nor ZipArchive are available for unpacking');

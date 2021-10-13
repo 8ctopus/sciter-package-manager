@@ -6,11 +6,11 @@ Sciter package manager (SPM) is an experimental sciter.js package manager writte
 
 - php >= 7.3
 - php `curl` module enabled
-- `tar` or `unzip` command must be present on your system
+- php `ZipArchive` module or `unzip` command must be present on your system
 
 ## how to install
 
-    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.1.9/spm.phar
+    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.2.0/spm.phar
 
 ## how to use
 
