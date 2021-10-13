@@ -175,10 +175,6 @@ class CommandInstall extends Command
                     return false;
                 }
 
-                // get archive first directory which we do not want to extract
-                $filename = $zip->getNameIndex(0);
-                $fileinfo = pathinfo($filename);
-
                 // extract package subdir to vendor dir
                 $zip->extractSubdirTo($dir, "${project}-${version}/src");
 
