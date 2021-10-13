@@ -6,11 +6,11 @@ Sciter package manager (SPM) is an experimental sciter.js package manager writte
 
 - php >= 7.3
 - `curl` module enabled
-- `ZipArchive` must be [installed](https://www.php.net/manual/en/zip.installation.php)
+- `tar` or `unzip` command must be present on your system
 
 ## how to install
 
-    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.1.8/spm.phar
+    curl -LO https://github.com/8ctopus/sciter-package-manager/releases/download/0.1.9/spm.phar
 
 ## how to use
 
@@ -19,7 +19,7 @@ Sciter package manager (SPM) is an experimental sciter.js package manager writte
 ```json
 {
     "require": {
-        "https://github.com/8ctopus/sciter-fontawesome": "1.0.0",
+        "https://github.com/8ctopus/sciter-fontawesome": "1.0.1",
         "https://github.com/8ctopus/sciter-dialogs": "1.2.17"
     }
 }
@@ -57,5 +57,3 @@ php src/Compiler.php
 - add update command
 
 ## known issues
-
-- does not seem to work on Mac because ZipArchive is not included?
