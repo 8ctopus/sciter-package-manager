@@ -116,7 +116,7 @@ class CommandInstall extends Command
             $result = Curl::downloadFile($url, $archive, $info, true);
 
             if ($result !== true) {
-                $this->io->error("Download archive - FAILED");
+                $this->io->error("Download archive - FAILED - {$info['error']}");
                 return false;
             }
 
