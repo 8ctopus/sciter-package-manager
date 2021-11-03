@@ -168,8 +168,8 @@ class Curl
 
             CURLOPT_FRESH_CONNECT  => false,
 
-            CURLOPT_CONNECTTIMEOUT => 5,
-            CURLOPT_TIMEOUT        => 5,
+            CURLOPT_CONNECTTIMEOUT => 20,
+            CURLOPT_TIMEOUT        => 20,
 
             CURLOPT_VERBOSE        => false,
 
