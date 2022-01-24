@@ -2,6 +2,8 @@
 
 Sciter package manager (SPM) is an experimental sciter.js package manager written in php.
 
+Updated: In January 2022, it was phased out in favor of using Node's package manager `npm`.
+
 ## requirements
 
 - php >= 7.3
